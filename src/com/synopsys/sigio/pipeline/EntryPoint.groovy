@@ -35,14 +35,11 @@ def execute() {
         Manifest manifest = new Manifest()
         manifest.init()
 
-        // load io-manifest
+        // load io-manifest.yml
         manifest.loadManifest()
 
         // populate io-manifest with actual values
         manifest.populateManifest()
-
-        // update TPI data (replace assetId and call IO API)
-        // manifest.autoOnboardApplication()
 
         // update calc matrix
         // manifest.autoOnboardRiskMatrix()

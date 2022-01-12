@@ -10,54 +10,17 @@ def init() {
     config = [:]
     initConfig()
 
-    initDone = true // ?
+    initDone = true
 
     return this
 }
 
 
 def loadManifest() {
-    // addConfig('manifestFileName', pipelineManifest)
-    // addConfig('manifestLoaded', true)
-    // customManifest = readManifest(pipelineManifest)
-
     template_manifest = [:]
+    template_manifest = readYaml(text: libraryResource("Auto-Config/Manifest/io-manifest.yml"))
 
-    // template flow
-    // if (RISKLEVEL == 'high-risk') {
-    //     template_manifest = readYaml(text: libraryResource("Auto-Config/Manifest/HighRisk-IO-manifest.yml"))
-    // } else if (RISKLEVEL == 'medium-risk') {
-    //     template_manifest = readYaml(text: libraryResource("Auto-Config/Manifest/MediumRisk-IO-manifest.yml"))
-    // } else if (RISKLEVEL == 'low-risk') {
-    //     template_manifest = readYaml(text: libraryResource("Auto-Config/Manifest/LowRisk-IO-manifest.yml"))
-    // } else {
-    //     UtilPrint.error("Invalid template value. Valid values are 'high-risk', 'medium-risk', 'low-risk'")
-    //     currentBuild.getRawBuild().getExecutor().interrupt(Result.ABORTED)
-    // }
-
-    template_manifest = readYaml(text: libraryResource("Auto-Config/Manifest/HighRisk-IO-manifest.yml"))
-
-    return this;
-
-    // merge the manifest with template
-    // template_manifest = mergeTemplateWithCustomManifest(template_manifest, customManifest)
-
-    // def jsonobj = new JsonBuilder(template_manifest).toPrettyString()
-    //UtilPrint.debug("AFTER MERGE:\n$jsonobj\n")
-
-    // Autoconfigure autoconfigure = new Autoconfigure()
-
-    // // populate and override values
-    // autoconfigure.populateManifest(template_manifest, config)
-    // // create application(tpi data)
-    // autoconfigure.autoOnboardApplication(template_manifest.application.assetId, template_manifest.application.appName,customManifest.template)
-    // // create risk matric
-    // autoconfigure.autoOnboardRiskMatrix(customManifest.template)
-    // setToolAndConnectorInfo(template_manifest)
-    // initDone = true
-    // manifestLoaded = true
-    // return template_manifest
-    
+    return this;    
 }
 
 
@@ -68,22 +31,6 @@ def populateManifest() {
     autoconfigure.populateManifest(template_manifest, config)
     return this;
 }
-
-// def autoOnboardApplication() {
-//     Autoconfigure autoconfigure = new Autoconfigure()
-
-//     // create application(tpi data)
-//     autoconfigure.autoOnboardApplication(template_manifest.application.assetId, template_manifest.application.appName, RISKLEVEL)
-//     return this;
-// }
-
-// def autoOnboardRiskMatrix() {
-//     Autoconfigure autoconfigure = new Autoconfigure()
-    
-//     // create risk matric
-//     autoconfigure.autoOnboardRiskMatrix(RISKLEVEL)
-//     return this;
-// }
 
 
 private void setToolAndConnectorInfo() {
@@ -284,22 +231,6 @@ def updateManifestPostScan(prescription) {
     }
 }
 
-/**
- *
- * @param pipelineManifest
- * @return
- */
-// Map readManifest(pipelineManifest) {
-//     def mFile= "${pwd()}/${pipelineManifest}"
-//     try {
-//         return readYaml(file: "${mFile}")
-//     }
-//     catch(e) {
-//         error("Error loading pipeline manifest YAML file: ${mFile} ")
-//         return false
-//     }
-// }
-
 def checkInit() {
     if (initDone) return true
     init()
@@ -338,6 +269,7 @@ def getConfig(String name) {
 def printConfig() {
     UtilPrint.map(config)
 }
+
 Map mergeMaps(Map map1, Map map2) {
     map2.each { k, v ->
         // when both items are maps, attempt to merge them
@@ -412,63 +344,3 @@ def initConfig() {
     config.gitData = UtilSCM.getGitRepoInfo()    
 }
 
-/**
- *
- * @param template
- * @param customManifest
- * @return
- */
-// def mergeTemplateWithCustomManifest(Map template, Map customManifest) {
-//     return customManifest.inject(template.clone()) { map, entry ->
-//         if (map[entry.key] instanceof Map && entry.value instanceof Map) {
-//             map[entry.key] = mergeTemplateWithCustomManifest(map[entry.key], entry.value)
-//         } else if (map[entry.key] instanceof Collection && entry.value instanceof Collection) {
-//             Collection colInManifest = entry.value
-//             Collection colInTemplate = map[entry.key]
-//             processCollection(entry, colInManifest, colInTemplate, map)
-//         } else {
-//             map[entry.key] = entry.value
-//         }
-//         return map
-//     }
-// }
-
-// List processCollection(Map.Entry<Object, Object> entry, Collection colInManifest, Collection colInTemplate, map) {
-
-//     // for lists like tools_info , connectors and build breaker deep merge
-//     colInManifest.eachWithIndex { Object item, int i ->
-//         if (item instanceof Map) {
-//             def element = -1
-//             // merge items for toll info and connects
-//             if (item.containsKey("tool_name")) {
-//                 element = colInTemplate.findIndexOf { it.tool_name == item.tool_name }
-//             } else if (item.containsKey("connector_name")) {
-//                 element = colInTemplate.findIndexOf { it.connector_name == item.connector_name }
-//             }
-//             if (element >= 0) {
-//                 colInTemplate[element] = mergeTemplateWithCustomManifest(colInTemplate[element], item)
-//             }
-
-//             // replace items for build breaker
-//             element = -1
-//             if (item.containsKey("activityname")) {
-//                 element = colInTemplate.findIndexOf { it.activityname == item.activityname }
-//                 if(element >=0 ) {
-//                     colInTemplate[element] = item
-//                 }
-//                 else {
-//                     colInTemplate.add(item)
-//                 }
-//             }
-//         }  // for normal array merge get the unique // for status
-//         else if (item instanceof String) {
-//             Collection combineList = colInTemplate + colInManifest
-//             map[entry.key] = combineList.unique()
-//         }
-//     }
-// }
-
-
-// static boolean isMap(object){
-//     return object instanceof Map
-// }

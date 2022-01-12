@@ -19,7 +19,6 @@ def execute(manifest, prescription) {
     PipelineUtils pipelineUtils = new PipelineUtils()
     ioConfig = manifest.getConfig()
     def totalRiskScore = ioConfig.totalRiskScore
-    //Determine Change Significance & Open Vulnerabilities
     //Print IO prescription
     stage(Constants.STAGE_IO_PRESCRIPTION) {
         ioPrescription.printPrescription(ioConfig)
@@ -31,7 +30,7 @@ def execute(manifest, prescription) {
         if (ioConfig.security.sast.enabled) {
             UtilPrint.sectionSeperator(Constants.STAGE_SAST_ENABLED)          
             UtilPrint.info("Polaris Scan") 
-            // stageUtils.runPolaris(manifest) 
+            stageUtils.runPolaris(manifest) 
         } else {
             UtilPrint.sectionSeperator(Constants.STAGE_SAST_DISABLED)
         }
@@ -43,7 +42,7 @@ def execute(manifest, prescription) {
         if (ioConfig.security.sca.enabled) {
             UtilPrint.sectionSeperator(Constants.STAGE_SCA_ENABLED)
             UtilPrint.info("Blackduck Scan")   
-            // stageUtils.runBlackDuck(manifest)
+            stageUtils.runBlackDuck(manifest)
         } else {
             UtilPrint.sectionSeperator(Constants.STAGE_SCA_DISABLED)
         }
