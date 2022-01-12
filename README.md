@@ -4,7 +4,7 @@ Jenkins shared library for integration of Synopsys tools with Jenkins CI
 
 Code Snippet for Jenkinsfile
 ```
-@Library('io-library')
-import com.synopsys.sigio.*
-new pipeline.EntryPoint().execute()
+@Library('intelligent-orchestration')
+import com.synopsys.*
+new com.synopsys.sigio.pipeline.EntryPoint().execute()
 ```
