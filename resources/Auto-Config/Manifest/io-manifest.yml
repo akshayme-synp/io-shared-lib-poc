@@ -4,43 +4,37 @@ environment:
   scm:  SCM_TYPE 
   scmOwner:  REPO_OWNER_NAME 
   scmRepositoryName:  REPO_NAME 
-  scmBranchName:  BRANCH_REF 
-  bitbucketUserName:  BITBUCKET_USERNAME 
-  bitbucketPassword:  BITBUCKET_PASSWORD 
-  bitbucketApiUrl: https://api.bitbucket.org/2.0/repositories/
+  scmBranchName:  BRANCH_REF
   githubApiUrl: https://api.github.com/repos/
   githubUsername: 'akshayme-synp'
   githubToken: GITHUB_ACCESS_TOKEN
+  enableJira: false
   jiraProjectName:  JIRA_PROJECT_KEY 
   jiraIssuesQuery:  resolution=Unresolved AND labels in (Security, Defect) 
   jiraApiUrl:  JIRA_API_URL 
   jiraUserName:  JIRA_USERNAME 
   jiraAuthToken:  JIRA_AUTH_TOKEN
+# for WF client
 connectors:
-- connector_name: slack
-  fields:
-    channelidentifier:  SLACK_CHANNEL_ID 
-    bearertoken:  SLACK_TOKEN 
-- connector_name: "msteams"
-  fields:
-    webhook_url: "<<MSTEAMS_WEBHOOK_URL>>" 
+# - connector_name: slack
+#   fields:
+#     channelidentifier:  SLACK_CHANNEL_ID
+#     bearertoken:  SLACK_TOKEN 
+# - connector_name: "msteams"
+#   fields:
+#     webhook_url: "MSTEAMS_WEBHOOK_URL"
 - connector_name: "github"
   fields:
     file_path: "workflowengine-results.sarif"
-    # owner_name: <<GITHUB_OWNER_NAME>>
-    # repository_name: <<GITHUB_REPO_NAME>>
-    # ref: <<GITHUB_REF>>
-    # commit_id: <<GITHUB_COMMIT_ID>>
-    # username: <<GITHUB_USERNAME>>
-    # accesstoken: <<GITHUB_ACCESS_TOKEN>>
 - connector_name: jira
-  fields:
+  fields:    
     issuetype: Bug
-    projectkey:  JIRA_PROJECT_KEY 
-    assignee:  JIRA_ASSIGNEE 
-    url:  JIRA_SERVER_URL 
-    username:  JIRA_USERNAME 
-    authtoken:  JIRA_AUTH_TOKEN 
+    projectkey: JIRA_PROJECT_NAME
+    assignee: JIRA_ASSIGNEE
+    url: JIRA_API_URL
+    username: JIRA_USERNAME
+    authtoken: JIRA_AUTH_TOKEN
+# for WF client
 buildbreaker:
 - activityname: sast
   status:

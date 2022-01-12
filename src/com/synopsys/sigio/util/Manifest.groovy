@@ -90,15 +90,16 @@ private void setToolAndConnectorInfo() {
             // }
             connInfo.remove(template_manifest.connectors[i])
         } else if (connInfo[i].connector_name == 'jira' ) {
-            if(template_manifest.environment.enableJira) {
-                template_manifest.connectors[i].fields.projectkey = template_manifest.environment.jiraProjectName
-                template_manifest.connectors[i].fields.assignee = config.gitData.committer
-                template_manifest.connectors[i].fields.url = config.environment.jiraUrl
-                template_manifest.connectors[i].fields.username = config.environment.jiraUserName
-                template_manifest.connectors[i].fields.authtoken = config.environment.jiraAuthToken
-            }else{
-                connInfo.remove(template_manifest.connectors[i])
-            }
+            template_manifest.connectors[i].fields.projectkey = JIRA_PROJECT_KEY
+            template_manifest.connectors[i].fields.assignee = config.environment.jiraUserName
+            template_manifest.connectors[i].fields.url = env.JIRA_API_URL
+            template_manifest.connectors[i].fields.username = config.environment.jiraUserName
+            template_manifest.connectors[i].fields.authtoken = config.environment.jiraAuthToken
+            // if(template_manifest.environment.enableJira) {
+                
+            // }else{
+            //     connInfo.remove(template_manifest.connectors[i])
+            // }
         } else if (connInfo[i].connector_name == 'github' ) {
                 // template_manifest.connectors[i].fields.accesstoken = config.environment.githubToken
                 // template_manifest.connectors[i].fields.commit_id = config.gitData.commitId
@@ -120,7 +121,7 @@ def getPrescription() {
 
     /* Convert to JSON for IO-IQ API call */
     def manifestJson = new JsonBuilder(template_manifest).toPrettyString()
-    UtilPrint.debug("Paylod to IO:\n$manifestJson\n")
+    // UtilPrint.debug("Paylod to IO:\n$manifestJson\n")
 
     def ioUrl = env.IO_URL + '/io/api/manifest/update'
     UtilPrint.debug("API URL: " + ioUrl)
@@ -334,6 +335,13 @@ def initConfig() {
             blackduckAuthToken: blackDuck_AuthToken.trim(),
             polarisInstanceUrl: env.POLARIS_URL,
             polarisAuthToken: polaris_token.trim()
+        ]
+    }
+
+    withCredentials([usernamePassword(credentialsId: 'Jira-Creds', passwordVariable: 'JIRA_TOKEN', usernameVariable: 'JIRA_USERNAME')]) {
+        config.environment = [
+            jiraUserName: JIRA_USERNAME,            
+            jiraAuthToken: JIRA_TOKEN.trim()
         ]
     }
 
