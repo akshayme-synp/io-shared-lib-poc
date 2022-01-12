@@ -84,6 +84,11 @@ private void setToolAndConnectorInfo() {
             //     template_manifest.connectors[i].fields.bearertoken = SLACK_TOKEN.trim()
             // }
             connInfo.remove(template_manifest.connectors[i])
+        } else if (connInfo[i].connector_name == 'msteams') {
+            // withCredentials([string(credentialsId: 'Slack-token', variable: 'SLACK_TOKEN')]) {
+            //     template_manifest.connectors[i].fields.bearertoken = SLACK_TOKEN.trim()
+            // }
+            connInfo.remove(template_manifest.connectors[i])
         } else if (connInfo[i].connector_name == 'jira' ) {
             if(template_manifest.environment.enableJira) {
                 template_manifest.connectors[i].fields.projectkey = template_manifest.environment.jiraProjectName
@@ -94,7 +99,15 @@ private void setToolAndConnectorInfo() {
             }else{
                 connInfo.remove(template_manifest.connectors[i])
             }
+        } else if (connInfo[i].connector_name == 'github' ) {
+                // template_manifest.connectors[i].fields.accesstoken = config.environment.githubToken
+                // template_manifest.connectors[i].fields.commit_id = config.gitData.commitId
+                // template_manifest.connectors[i].fields.ref = config.gitData.gitBranch
+                // template_manifest.connectors[i].fields.owner_name = config.gitData.repoOwner
+                // template_manifest.connectors[i].fields.repository_name = config.gitData.repoName            
         }
+
+        
     }
 }
 
