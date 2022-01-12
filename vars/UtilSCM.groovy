@@ -22,7 +22,7 @@ def getGitRepoInfo() {
     
     gitData.gitUrl = GITURL
     gitData.gitBranch = GITBRANCH
-    gitData.committer = GITCOMMITTER
+    // gitData.committer = GITCOMMITTER
 
     // gitData.repoOwner = REPOOWNER    
 

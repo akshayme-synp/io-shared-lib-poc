@@ -351,12 +351,7 @@ def initConfig() {
     config.polarisNode = 'master'
 
     config.application = [
-        appType: '',
-        microservice: false,
-        projectLanguage: 'Java',
-        platformVersion: 'jdk-8',
-        buildSystem: 'Maven',
-        projectName: PROJECTNAME
+        projectName: IO_PROJECTNAME
     ]
 
     config.security = [
