@@ -40,15 +40,12 @@ def updateToolInformation(prescription) {
             toolInfo[i].fields = [:]
         }
 
-        def fields = toolInfo[i].fields
         if (toolInfo[i].tool_name == 'blackduck' && prescription.security.activities.sca.enabled) {
-            fields.enabled = true
+            toolInfo[i].enabled = true
         } 
         else if (toolInfo[i].tool_name == 'polaris' && prescription.security.activities.sast.enabled) {
-            fields.enabled = true
+            toolInfo[i].enabled = true
         }
-
-        toolInfo[i].fields = fields
     }   
 }
 
