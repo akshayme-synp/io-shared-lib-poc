@@ -54,6 +54,8 @@ def execute(manifest, prescription) {
             UtilPrint.sectionSeperator(Constants.STAGE_WF_ENABLED)
             // update last scan date
             manifest.updateManifestPostScan(prescription)
+            // update tool_information
+            manifest.updateToolInformation(prescription)
             // call workflow engine
             UtilWorkflow.triggerWorkflow(manifest)
         } else {

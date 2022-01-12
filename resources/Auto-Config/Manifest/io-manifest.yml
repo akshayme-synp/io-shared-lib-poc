@@ -52,7 +52,7 @@ buildbreaker:
 # for WF client
 tool_information:
 - tool_name: polaris
-  enabled: true
+  enabled: false
   fields:
     project_name: POLARIS_PROJECT_NAME
     instance_url: POLARIS_SERVER_URL

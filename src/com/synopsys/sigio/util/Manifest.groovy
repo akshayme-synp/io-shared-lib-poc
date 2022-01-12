@@ -32,6 +32,26 @@ def populateManifest() {
     return this;
 }
 
+def updateToolInformation(prescription) {
+    def toolInfo = template_manifest.tool_information
+    for (int i = 0; i < toolInfo.size(); i++) {
+        //initialize to avoid NPE
+        if (toolInfo[i].fields == null) {
+            toolInfo[i].fields = [:]
+        }
+
+        def fields = toolInfo[i].fields
+        if (toolInfo[i].tool_name == 'blackduck' && prescription.security.activities.sca.enabled) {
+            fields.enabled = true
+        } 
+        else if (toolInfo[i].tool_name == 'polaris' && prescription.security.activities.sast.enabled) {
+            fields.enabled = true
+        }
+
+        toolInfo[i].fields = fields
+    }   
+}
+
 
 private void setToolAndConnectorInfo() {
 //Populate Tool information for licensing checks and for WF Engine
