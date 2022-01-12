@@ -1,0 +1,81 @@
+application:
+  appId: APP_ID
+  assetId: ASSET_ID
+  appType: Webapp # or webservice or microservice or backend
+  appName: webapp # can be removed to use assetId for project names
+  microservice: false #default set to false; unused
+  projectLanguage: Java  #default for language + build template
+  platformVersion: Java 8  # default for language + build template
+  buildSystem: Maven   # default for language + build template
+  riskMatrixRevision: low-risk 
+  sourceFilePattern: ".*\\+\\+\\+.*(\\.java|\\.jsp)+.*"
+  sensitivePackagePattern: ".*(\\+\\+\\+.*(\\/((a|A)pp|(c|C)rypto|(a|A)uth|(s|S)ec|(l|L)ogin|(p|P)ass|(o|O)auth|(t|T)oken|(i|I)d|(c|C)red|(s|S)aml|(c|C)ognito|(s|S)ignin|(s|S)ignup|(a|A)ccess))).*"
+  fileChangeThreshold: 30
+environment:
+  scm:  SCM_TYPE 
+  scmOwner:  REPO_OWNER_NAME 
+  scmRepositoryName:  REPO_NAME 
+  scmBranchName:  BRANCH_REF 
+  bitbucketUserName:  BITBUCKET_USERNAME 
+  bitbucketPassword:  BITBUCKET_PASSWORD 
+  bitbucketApiUrl: https://api.bitbucket.org/2.0/repositories/
+  githubApiUrl: https://api.github.com/repos/
+  jiraProjectName:  JIRA_PROJECT_KEY 
+  jiraIssuesQuery:  resolution=Unresolved AND labels in (Security, Defect) 
+  jiraApiUrl:  JIRA_API_URL 
+  jiraUserName:  JIRA_USERNAME 
+  jiraAuthToken:  JIRA_AUTH_TOKEN 
+security:
+  pipeline:
+    toolchain: "Synopsys"
+  activities:
+    sast:
+      enabled: false
+      rescanThreshold: 20
+    sca:
+      enabled: false
+      rescanThreshold: 30
+    dast:
+      enabled: false
+      rescanThreshold: 30
+    sastplusm:
+      rescanThreshold: 30
+    dastplusm:
+      rescanThreshold: 30
+    imagescan:
+      rescanThreshold: 30
+connectors:
+- connector_name: slack
+  fields:
+    channelidentifier:  SLACK_CHANNEL_ID 
+    bearertoken:  SLACK_TOKEN 
+buildbreaker:
+- activityname: sast
+  status:
+  - new
+  - open
+  overallseverity:
+  - critical
+- activityname: sca
+  status:
+  - new
+  overallseverity:
+  - critical
+# for WF client
+tool_information:
+- tool_name: coverity
+  enabled:  false 
+  fields:
+    file_path:  FILE_PATH 
+- tool_name: blackduck
+  enabled:  false 
+  fields:
+    project_name:  BLACKDUCK_PROJECT_NAME 
+    instance_url:  BLACKDUCK_SERVER_URL 
+    auth_token:  BlackDuck_AuthToken 
+- tool_name: polaris
+  enabled: false
+  fields:
+    project_name: POLARIS_PROJECT_NAME
+    instance_url: POLARIS_SERVER_URL
+    auth_token: POLARIS_ACCESS_TOKEN

@@ -1,0 +1,65 @@
+application:
+  projectName: PROJECT_NAME
+environment:
+  scm:  SCM_TYPE 
+  scmOwner:  REPO_OWNER_NAME 
+  scmRepositoryName:  REPO_NAME 
+  scmBranchName:  BRANCH_REF 
+  bitbucketUserName:  BITBUCKET_USERNAME 
+  bitbucketPassword:  BITBUCKET_PASSWORD 
+  bitbucketApiUrl: https://api.bitbucket.org/2.0/repositories/
+  githubApiUrl: https://api.github.com/repos/
+  githubUsername: 'akshayme-synp'
+  githubToken: GITHUB_ACCESS_TOKEN
+  jiraProjectName:  JIRA_PROJECT_KEY 
+  jiraIssuesQuery:  resolution=Unresolved AND labels in (Security, Defect) 
+  jiraApiUrl:  JIRA_API_URL 
+  jiraUserName:  JIRA_USERNAME 
+  jiraAuthToken:  JIRA_AUTH_TOKEN
+connectors:
+- connector_name: slack
+  fields:
+    channelidentifier:  SLACK_CHANNEL_ID 
+    bearertoken:  SLACK_TOKEN 
+- connector_name: jira
+  fields:
+    issuetype: Bug
+    projectkey:  JIRA_PROJECT_KEY 
+    assignee:  JIRA_ASSIGNEE 
+    url:  JIRA_SERVER_URL 
+    username:  JIRA_USERNAME 
+    authtoken:  JIRA_AUTH_TOKEN 
+buildbreaker:
+- activityname: sast
+  status:
+  - new
+  - open
+  overallseverity:
+  - critical
+  categories:
+  - name: cross-site scripting
+    severity: high
+  - name: sql injection
+    severity: high
+- activityname: sca
+  status:
+  - new
+  overallseverity:
+  - critical
+  categories:
+  - name: cve-2015-2119
+    severity: medium
+# for WF client
+tool_information:
+- tool_name: polaris
+  enabled: true
+  fields:
+    project_name: POLARIS_PROJECT_NAME
+    instance_url: POLARIS_SERVER_URL
+    auth_token: POLARIS_ACCESS_TOKEN
+- tool_name: blackduck
+  enabled: false
+  fields:
+    project_name: BLACKDUCK_PROJECT_NAME
+    instance_url: BLACKDUCK_SERVER_URL
+    auth_token: BLACKDUCK_ACCESS_TOKEN

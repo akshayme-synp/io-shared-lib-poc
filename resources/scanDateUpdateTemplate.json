@@ -1,0 +1,23 @@
+{
+  "assetId": "<ASSET-ID>",
+  "activities": {
+    "sast": {
+      "lastScanDate": "<SAST-LASTSCAN>"
+    },
+    "sca": {
+      "lastScanDate": "<SCA-LASTSCAN>"
+    },
+    "dast": {
+      "lastScanDate": "<DAST-LASTSCAN>"
+    },
+    "sastplusm": {
+      "lastScanDate": "<SASTPLUSM-LASTSCAN>"
+    },
+    "dastplusm": {
+      "lastScanDate": "<DASTPLUSM-LASTSCAN>"
+    },
+    "imageScan": {
+      "lastScanDate": "<DYN-LASTSCAN>"
+    }
+  }
+}
