@@ -6,23 +6,23 @@ environment:
   scmRepositoryName:  REPO_NAME 
   scmBranchName:  BRANCH_REF
   githubApiUrl: https://api.github.com/repos/
-  githubUsername: 'akshayme-synp'
+  githubUsername: GITHUB_USERNMAE
   githubToken: GITHUB_ACCESS_TOKEN
   enableJira: false
-  jiraProjectName:  JIRA_PROJECT_KEY 
+  jiraProjectName:  JIRA_PROJECT_KEY
   jiraIssuesQuery:  resolution=Unresolved AND labels in (Security, Defect) 
   jiraApiUrl:  JIRA_API_URL 
   jiraUserName:  JIRA_USERNAME 
   jiraAuthToken:  JIRA_AUTH_TOKEN
 # for WF client
 connectors:
-# - connector_name: slack
-#   fields:
-#     channelidentifier:  SLACK_CHANNEL_ID
-#     bearertoken:  SLACK_TOKEN 
-# - connector_name: "msteams"
-#   fields:
-#     webhook_url: "MSTEAMS_WEBHOOK_URL"
+- connector_name: slack
+  fields:
+    channelidentifier:  SLACK_CHANNEL_ID
+    bearertoken:  SLACK_TOKEN 
+- connector_name: "msteams"
+  fields:
+    webhook_url: "MSTEAMS_WEBHOOK_URL"
 - connector_name: "github"
   fields:
     file_path: "workflowengine-results.sarif"

@@ -47,5 +47,6 @@ static void populateManifest(template_manifest, config) {
     template_manifest.environment.scmOwner = config.gitData.repoOwner
     template_manifest.environment.scmRepositoryName = config.gitData.repoName
     template_manifest.environment.scmBranchName = config.gitData.gitBranch
+    template_manifest.environment.githubUsername = config.environment.githubUsername
     template_manifest.environment.githubToken = config.environment.githubToken
 }

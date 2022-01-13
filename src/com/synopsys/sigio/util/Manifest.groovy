@@ -78,37 +78,28 @@ private void setToolAndConnectorInfo() {
     //Populate Connectors info for Workflow Engine feedback
     def connInfo = template_manifest.connectors
     for (int i = 0; i < connInfo.size(); i++) {
-
         if (connInfo[i].connector_name == 'slack') {
-            // withCredentials([string(credentialsId: 'Slack-token', variable: 'SLACK_TOKEN')]) {
-            //     template_manifest.connectors[i].fields.bearertoken = SLACK_TOKEN.trim()
-            // }
-            connInfo.remove(template_manifest.connectors[i])
+            withCredentials([string(credentialsId: 'Slack-token', variable: 'SLACK_TOKEN')]) {
+                template_manifest.connectors[i].fields.channelidentifier = env.SLACK_CHANNEL_IDENTIFIER
+                template_manifest.connectors[i].fields.bearertoken = SLACK_TOKEN.trim()
+            }
+            // connInfo.remove(template_manifest.connectors[i])
         } else if (connInfo[i].connector_name == 'msteams') {
-            // withCredentials([string(credentialsId: 'Slack-token', variable: 'SLACK_TOKEN')]) {
-            //     template_manifest.connectors[i].fields.bearertoken = SLACK_TOKEN.trim()
-            // }
-            connInfo.remove(template_manifest.connectors[i])
+            template_manifest.connectors[i].fields.webhook_url = env.MSTEAMS_WEBHOOK_URL
+            // connInfo.remove(template_manifest.connectors[i])
         } else if (connInfo[i].connector_name == 'jira' ) {
             template_manifest.connectors[i].fields.projectkey = JIRA_PROJECT_KEY
             template_manifest.connectors[i].fields.assignee = config.environment.jiraUserName
             template_manifest.connectors[i].fields.url = env.JIRA_API_URL
             template_manifest.connectors[i].fields.username = config.environment.jiraUserName
             template_manifest.connectors[i].fields.authtoken = config.environment.jiraAuthToken
-            // if(template_manifest.environment.enableJira) {
-                
-            // }else{
-            //     connInfo.remove(template_manifest.connectors[i])
-            // }
         } else if (connInfo[i].connector_name == 'github' ) {
-                // template_manifest.connectors[i].fields.accesstoken = config.environment.githubToken
-                // template_manifest.connectors[i].fields.commit_id = config.gitData.commitId
-                // template_manifest.connectors[i].fields.ref = config.gitData.gitBranch
-                // template_manifest.connectors[i].fields.owner_name = config.gitData.repoOwner
-                // template_manifest.connectors[i].fields.repository_name = config.gitData.repoName            
+            // template_manifest.connectors[i].fields.accesstoken = config.environment.githubToken
+            // template_manifest.connectors[i].fields.commit_id = config.gitData.commitId
+            // template_manifest.connectors[i].fields.ref = config.gitData.gitBranch
+            // template_manifest.connectors[i].fields.owner_name = config.gitData.repoOwner
+            // template_manifest.connectors[i].fields.repository_name = config.gitData.repoName
         }
-
-        
     }
 }
 
@@ -121,7 +112,7 @@ def getPrescription() {
 
     /* Convert to JSON for IO-IQ API call */
     def manifestJson = new JsonBuilder(template_manifest).toPrettyString()
-    // UtilPrint.debug("Paylod to IO:\n$manifestJson\n")
+    UtilPrint.debug("Paylod to IO:\n$manifestJson\n")
 
     def ioUrl = env.IO_URL + '/io/api/manifest/update'
     UtilPrint.debug("API URL: " + ioUrl)
@@ -317,13 +308,15 @@ def initConfig() {
     UtilPrint.info('manifest: init config')
     
     withCredentials([
-        string(credentialsId: 'Github-AuthToken', variable: 'Scm_AuthToken'), 
-        string(credentialsId: 'IO-AUTH-TOKEN', variable: 'IO_AUTH_TOKEN')        
+        string(credentialsId: 'Github-AuthToken', variable: 'scm_AuthToken')
     ]) {
         config.environment = [
-            githubToken: env.Scm_AuthToken.trim(),            
-            ioAccessToken: IO_AUTH_TOKEN.trim()
+            githubToken: scm_AuthToken.trim(),
         ]
+    }
+
+    withCredentials([usernamePassword(credentialsId: 'Scm-creds', passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
+        config.environment.githubUsername = GITHUB_USERNAME
     }
 
     withCredentials([
@@ -339,10 +332,8 @@ def initConfig() {
     }
 
     withCredentials([usernamePassword(credentialsId: 'Jira-Creds', passwordVariable: 'JIRA_TOKEN', usernameVariable: 'JIRA_USERNAME')]) {
-        config.environment = [
-            jiraUserName: JIRA_USERNAME,            
-            jiraAuthToken: JIRA_TOKEN.trim()
-        ]
+        config.environment.jiraUserName = JIRA_USERNAME           
+        config.environment.jiraAuthToken = JIRA_TOKEN.trim()
     }
 
     //Names of the Jenkins nodes that have respective tool installations
@@ -372,7 +363,6 @@ def initConfig() {
     config.totalRiskScore = 0 //stores calculated risk score from IO manifest update response    
     
     // config.imchannel = 'slack'
-    // config.imchannelId = 'C015LGE7RRQ'   
 
     config.gitData = UtilSCM.getGitRepoInfo()    
 }
