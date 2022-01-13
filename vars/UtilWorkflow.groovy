@@ -19,7 +19,7 @@ def triggerWorkflow(manifest) {
 
         writeFile file: "synopsys-io.json", text: manifestJson
 
-        sh 'cat synopsys-io.json'
+        // sh 'cat synopsys-io.json'
         
         sh 'java -jar WorkflowClient.jar --workflowengine.url=' + env.WORKFLOW_URL.trim() + ' --io.manifest.path=synopsys-io.json'
         def feedbackJson = readJSON file: 'wf-output.json', text: ''

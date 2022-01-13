@@ -112,7 +112,7 @@ def getPrescription() {
 
     /* Convert to JSON for IO-IQ API call */
     def manifestJson = new JsonBuilder(template_manifest).toPrettyString()
-    UtilPrint.debug("Paylod to IO:\n$manifestJson\n")
+    // UtilPrint.debug("Paylod to IO:\n$manifestJson\n")
 
     def ioUrl = env.IO_URL + '/io/api/manifest/update'
     UtilPrint.debug("API URL: " + ioUrl)
