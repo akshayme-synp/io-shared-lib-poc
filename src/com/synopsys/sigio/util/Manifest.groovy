@@ -51,7 +51,7 @@ def updateToolInformation(prescription) {
 
 
 private void setToolAndConnectorInfo() {
-//Populate Tool information for licensing checks and for WF Engine
+    // Populate Tool information for licensing checks and for WF Engine
     def toolInfo = template_manifest.tool_information
     for (int i = 0; i < toolInfo.size(); i++) {
         //initialize to avoid NPE
@@ -75,7 +75,7 @@ private void setToolAndConnectorInfo() {
         toolInfo[i].fields = fields
     }
 
-    //Populate Connectors info for Workflow Engine feedback
+    // Populate Connectors info for Workflow Engine feedback
     def connInfo = template_manifest.connectors
     for (int i = 0; i < connInfo.size(); i++) {
         if (connInfo[i].connector_name == 'slack') {
@@ -99,6 +99,20 @@ private void setToolAndConnectorInfo() {
             // template_manifest.connectors[i].fields.ref = config.gitData.gitBranch
             // template_manifest.connectors[i].fields.owner_name = config.gitData.repoOwner
             // template_manifest.connectors[i].fields.repository_name = config.gitData.repoName
+        }
+    }
+
+    // Populate codedx
+    if(config.codedx && config.codedx.instance_url && config.codedx.api_key && config.codedx.project_id) {
+        template_manifest.codedx.instance_url = config.codedx.instance_url
+        template_manifest.codedx.api_key = config.codedx.api_key
+        template_manifest.codedx.project_id = config.codedx.project_id        
+        
+        def buildbreakerInfo = template_manifest.buildbreaker
+        for (int i = 0; i < buildbreakerInfo.size(); i++) {
+            if (buildbreakerInfo[i].activityname == 'codedx' && config.codedx.min_risk_score) {
+                template_manifest.buildbreaker[i].min_risk_score = config.codedx.min_risk_score
+            }
         }
     }
 }
@@ -318,6 +332,17 @@ def initConfig() {
     withCredentials([usernamePassword(credentialsId: 'Scm-creds', passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
         config.environment.githubUsername = GITHUB_USERNAME
     }
+
+    // withCredentials([
+    //     string(credentialsId: 'CODEDX_API_KEY', variable: 'api_key')
+    // ]) {
+    //     config.codedx = [
+    //         instance_url: env.CODEDX_SERVER_URL,
+    //         api_key: api_key.trim(),
+    //         project_id: CODEDX_PROJECT_ID,
+    //         min_risk_score: CODEDX_MIN_RISK_SCORE
+    //     ]
+    // }
 
     withCredentials([
         string(credentialsId: 'BlackDuck-AuthToken', variable: 'blackDuck_AuthToken'),
